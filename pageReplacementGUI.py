@@ -2,6 +2,7 @@ import tkinter as tk
 import NRULFU
 import FIFOMFU
 import random
+import OPT_LRU
 class pageReplacment:
     def __init__(self) -> None:
         self.root=tk.Tk()
@@ -48,40 +49,41 @@ class pageReplacment:
     def select_strategy(self):
         try:
             self.selectStrategy.destroy()
+            self.insertMemorySize.destroy()
         except:
             pass
+        self.insertMemorySize=tk.Entry(self.insertFrame)
+        self.insertMemorySize.pack()       
         self.selectStrategy=tk.Menubutton(self.insertFrame,text='Selecting strategy',relief=tk.RIDGE)
         self.selectStrategy.pack()
         strategies=tk.Menu(self.selectStrategy,tearoff=0)
         self.selectStrategy.config(menu=strategies)
-        strategies.add_command(label='FIFO',command= lambda: self.decision('FIFO'))
-        strategies.add_command(label='MFU',command= lambda: self.decision('MFU'))
-        strategies.add_command(label='NRU',command= lambda: self.decision('NRU'))
-        strategies.add_command(label='LFU',command= lambda: self.decision('LFU'))
-        strategies.add_command(label='OPT',command= lambda: self.decision('OPT'))
-        strategies.add_command(label='LRU',command= lambda: self.decision('LRU')) 
+        strategies.add_command(label='FIFO',command= lambda: self.process('FIFO'))
+        strategies.add_command(label='MFU',command= lambda: self.process('MFU'))
+        strategies.add_command(label='NRU',command= lambda: self.process('NRU'))
+        strategies.add_command(label='LFU',command= lambda: self.process('LFU'))
+        strategies.add_command(label='OPT',command= lambda: self.process('OPT'))
+        strategies.add_command(label='LRU',command= lambda: self.process('LRU')) 
 
-    def decision(self,type):
-        self.type=type
-        self.process()
-    def process(self):
-        memorySize=3
+    def process(self,type):
+        memorySize=int(self.insertMemorySize.get())
         self.demonstration.delete("1.0", tk.END)
         input_content = [int(x) for x in self.generating.get("1.0", tk.END).split(',')]
-        if self.type=='FIFO':
+        if type=='FIFO':
             fault, states = FIFOMFU.fifo_page_replacement(input_content, memorySize)
-        elif self.type=='MFU':
+        elif type=='MFU':
             fault,states= FIFOMFU.mfu_page_replacement(input_content,memorySize)
-        elif self.type=='NRU':
+        elif type=='NRU':
             fault,states=NRULFU.nru(input_content,memorySize)
-        elif self.type=='LFU':
+        elif type=='LFU':
             fault,states=NRULFU.lfu(input_content,memorySize)
-        print(states)
+        elif type=='OPT':
+            fault,states=OPT_LRU.optimal(input_content,memorySize)
+        elif type=='LRU':
+            fault,states=OPT_LRU.lru(input_content,memorySize)    
         for index in range(len(states)):
             self.demonstration.insert(tk.END, f"{states[index]}   {input_content[index]}\n")
-        
         self.demonstration.insert(tk.END, f"number of page fault: {fault}\n")
-
     def display(self,root):
         self.demonstration=tk.Text(root,height=40,width=40)
         self.demonstration.pack()

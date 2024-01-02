@@ -43,15 +43,15 @@ def optimal(pages, frames):
             faults += 1
         mem_states.append(list(memory))  # Sao chép trạng thái hiện tại của bộ nhớ
     return faults, mem_states
+if __name__=="__main__":
+    # Chuỗi truy cập trang và kích thước bộ nhớ
+    pages = [7, 0, 1, 2, 0, 3, 0, 4, 2, 3, 0, 3, 2, 1, 2, 0, 1, 7, 0, 1]
+    # pages = [1, 2, 3, 4, 1, 2, 5, 1, 2, 3, 4, 5]
+    frames = 3
 
-# Chuỗi truy cập trang và kích thước bộ nhớ
-pages = [7, 0, 1, 2, 0, 3, 0, 4, 2, 3, 0, 3, 2, 1, 2, 0, 1, 7, 0, 1]
-# pages = [1, 2, 3, 4, 1, 2, 5, 1, 2, 3, 4, 5]
-frames = 3
+    # Chạy lại mô phỏng cho từng giải thuật
+    opt_faults, opt_states = optimal(pages, frames)
+    lru_faults, lru_states = lru(pages, frames)
 
-# Chạy lại mô phỏng cho từng giải thuật
-opt_faults, opt_states = optimal(pages, frames)
-lru_faults, lru_states = lru(pages, frames)
-
-print("OPT", opt_faults, opt_states)
-print("LRU", lru_faults, lru_states)
+    print("OPT", opt_faults, opt_states)
+    print("LRU", lru_faults, lru_states)
