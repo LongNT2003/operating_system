@@ -3,6 +3,7 @@ import NRULFU
 import FIFOMFU
 import random
 import OPT_LRU
+import time
 class pageReplacment:
     def __init__(self) -> None:
         self.root=tk.Tk()
@@ -28,9 +29,9 @@ class pageReplacment:
             self.generating.destroy()
         except:
             pass
-        self.generating=tk.Text(root,height=2,width=40)
+        self.generating=tk.Text(root,height=5,width=40)
         self.generating.pack()
-        sequence_length = 15
+        sequence_length = 30
         numbers_range = range(10)
 
         random_sequence = [random.choice(numbers_range) for _ in range(sequence_length)]
@@ -69,6 +70,7 @@ class pageReplacment:
         memorySize=int(self.insertMemorySize.get())
         self.demonstration.delete("1.0", tk.END)
         input_content = [int(x) for x in self.generating.get("1.0", tk.END).split(',')]
+        start=time.time()
         if type=='FIFO':
             fault, states = FIFOMFU.fifo_page_replacement(input_content, memorySize)
         elif type=='MFU':
@@ -81,18 +83,14 @@ class pageReplacment:
             fault,states=OPT_LRU.optimal(input_content,memorySize)
         elif type=='LRU':
             fault,states=OPT_LRU.lru(input_content,memorySize)    
+        end=time.time()
         for index in range(len(states)):
             self.demonstration.insert(tk.END, f"{states[index]}   {input_content[index]}\n")
         self.demonstration.insert(tk.END, f"number of page fault: {fault}\n")
+        self.demonstration.insert(tk.END, f"running time of algorithm : {round(end-start,8)}\n")
     def display(self,root):
         self.demonstration=tk.Text(root,height=40,width=40)
         self.demonstration.pack()
-
-
-
-
-
-
 if __name__=='__main__':
     run=pageReplacment()
 
