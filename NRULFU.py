@@ -70,6 +70,7 @@ def lfu(pages, frames):
                 memory.remove(least_recently_used[1])
                 memory.append(page)
             freq[page] = 0
+            faults += 1
         freq[page] += 1
         mem_states.append(list(memory))
     return faults, mem_states
