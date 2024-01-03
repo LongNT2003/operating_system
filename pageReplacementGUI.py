@@ -21,7 +21,7 @@ class pageReplacment:
         selectInput.pack()
         options=tk.Menu(selectInput,tearoff=0)
         selectInput.config(menu=options)
-        options.add_command(label='random page sequence with input number range',command= lambda: self.generateSequence(root))
+        options.add_command(label='random page sequence',command= lambda: self.generateSequence(root))
         options.add_command(label='insert page sequence',command= lambda : self.insertSequence(root))
 
     def generateSequence(self,root):
@@ -51,8 +51,11 @@ class pageReplacment:
         try:
             self.selectStrategy.destroy()
             self.insertMemorySize.destroy()
+            self.memoryLabel.destroy()
         except:
             pass
+        self.memoryLabel=tk.Label(self.insertFrame,text='Memory size')
+        self.memoryLabel.pack()
         self.insertMemorySize=tk.Entry(self.insertFrame)
         self.insertMemorySize.pack()       
         self.selectStrategy=tk.Menubutton(self.insertFrame,text='Selecting strategy',relief=tk.RIDGE)
