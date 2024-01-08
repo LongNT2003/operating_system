@@ -23,6 +23,7 @@ def fifo_page_replacement(pages, memory_size):
     memory = deque(maxlen=memory_size)
     page_faults = 0
     state=[]
+    is_fault=0
     for page in pages:
         if page not in memory:
             page_faults += 1
@@ -33,9 +34,11 @@ def fifo_page_replacement(pages, memory_size):
 
             # Add the new page to the back of the queue (end of the memory)
             memory.append(page)
+            is_fault=1
         else:
+            is_fault=0
             print(f"Page {page} already in memory.")
-        state.append(list(memory))
+        state.append([list(memory),is_fault])
         print(list(memory))
         print(page_faults)
 
@@ -46,11 +49,13 @@ def mfu_page_replacement(pages, memory_size):
     page_frequency = defaultdict(int)
     page_faults = 0
     state=[]
+    is_fault=0
     for page in pages:
         page_frequency[page] += 1
 
         if page not in memory:
             page_faults += 1
+            is_fault=1
 
             if len(memory) == memory_size:
                 # If memory is full, find the page with the highest frequency
@@ -63,8 +68,9 @@ def mfu_page_replacement(pages, memory_size):
         
 
         else:
+            is_fault=0
             print(f"Page {page} already in memory.")
-        state.append(list(memory))
+        state.append([list(memory),is_fault])
         print(memory)
         print(page_faults)
 

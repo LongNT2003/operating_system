@@ -29,9 +29,9 @@ class pageReplacment:
             self.generating.destroy()
         except:
             pass
-        self.generating=tk.Text(root,height=5,width=40)
+        self.generating=tk.Text(root,height=7,width=40)
         self.generating.pack()
-        sequence_length = 30
+        sequence_length = 40
         numbers_range = range(10)
 
         random_sequence = [random.choice(numbers_range) for _ in range(sequence_length)]
@@ -88,7 +88,10 @@ class pageReplacment:
             fault,states=OPT_LRU.lru(input_content,memorySize)    
         end=time.time()
         for index in range(len(states)):
-            self.demonstration.insert(tk.END, f"{states[index]}   {input_content[index]}\n")
+            if states[index][1]==0:
+                self.demonstration.insert(tk.END, f"{states[index][0]}   {input_content[index]}\n")
+            else:
+                self.demonstration.insert(tk.END, f"{states[index][0]}   {input_content[index]} page fault!\n")
         self.demonstration.insert(tk.END, f"number of page fault: {fault}\n")
         self.demonstration.insert(tk.END, f"running time of algorithm : {round(end-start,8)}\n")
     def display(self,root):

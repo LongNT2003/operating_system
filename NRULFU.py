@@ -45,6 +45,7 @@ Tóm lại, cả NRU và LFU đều là các chiến lược thay thế trang đ
 def nru(pages, frames):
     memory, faults, mem_states = [], 0, []
     last_accessed = {} 
+    is_fault=0
     for page in pages:
         if page not in memory:
             if len(memory) < frames:
@@ -54,13 +55,17 @@ def nru(pages, frames):
                 memory.remove(oldest[1])
                 memory.append(page)
             faults += 1
+            is_fault=1
+        else:
+            is_fault=0
         last_accessed[page] = 0  
-        mem_states.append(list(memory))
+        mem_states.append([list(memory),is_fault])
     return faults, mem_states
 
 def lfu(pages, frames):
     memory, faults, mem_states = [], 0, []
     freq = {}
+    is_fault=0
     for page in pages:
         if page not in memory:
             if len(memory) < frames:
@@ -71,13 +76,16 @@ def lfu(pages, frames):
                 memory.append(page)
             freq[page] = 0
             faults += 1
+            is_fault=1
+        else:
+            is_fault=0
         freq[page] += 1
-        mem_states.append(list(memory))
+        mem_states.append([list(memory),is_fault])
     return faults, mem_states
 if __name__=='__main__':
     # Input data
-    pages = [7, 0, 1, 2, 0, 3, 0, 4, 2, 3, 0, 3, 2, 1, 2, 0, 1, 7, 0, 1]
-    # pages = [1, 2, 3, 4, 1, 2, 5, 1, 2, 3, 4, 5]
+    # pages = [7, 0, 1, 2, 0, 3, 0, 4, 2, 3, 0, 3, 2, 1, 2, 0, 1, 7, 0, 1]
+    pages = [1, 2, 3, 4, 1, 2, 5, 1, 2, 3, 4, 5]
     frames = 3
 
     # Run simulations

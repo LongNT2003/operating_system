@@ -1,6 +1,7 @@
 
 def lru(pages, frames):
     memory, faults, mem_states = [], 0, []
+    is_fault=0
     # Dùng dictionary để lưu vị trí sử dụng cuối cùng của các trang
     last_used = {}
     for i, page in enumerate(pages):
@@ -13,16 +14,21 @@ def lru(pages, frames):
                 memory.remove(lru_page)
                 memory.append(page)
             faults += 1
+            is_fault=1
+        else:
+            is_fault=0
         # Cập nhật vị trí sử dụng cuối cùng cho trang này
         last_used[page] = i
-        mem_states.append(list(memory))  # Sao chép trạng thái hiện tại của bộ nhớ
+        mem_states.append([list(memory),is_fault])  # Sao chép trạng thái hiện tại của bộ nhớ
     return faults, mem_states
 
 # Sửa lại cài đặt cho thuật toán OPT để tránh lỗi khi trang không xuất hiện lại trong chuỗi
 def optimal(pages, frames):
     memory, faults, mem_states = [], 0, []
+    is_fault=0
     for i in range(len(pages)):
         if pages[i] not in memory:
+            is_fault=1
             if len(memory) < frames:
                 memory.append(pages[i])
             else:
@@ -41,12 +47,14 @@ def optimal(pages, frames):
                 memory.remove(to_replace)
                 memory.append(pages[i])
             faults += 1
-        mem_states.append(list(memory))  # Sao chép trạng thái hiện tại của bộ nhớ
+        else:
+            is_fault=0
+        mem_states.append([list(memory),is_fault])  # Sao chép trạng thái hiện tại của bộ nhớ
     return faults, mem_states
 if __name__=="__main__":
     # Chuỗi truy cập trang và kích thước bộ nhớ
-    pages = [7, 0, 1, 2, 0, 3, 0, 4, 2, 3, 0, 3, 2, 1, 2, 0, 1, 7, 0, 1]
-    # pages = [1, 2, 3, 4, 1, 2, 5, 1, 2, 3, 4, 5]
+    # pages = [7, 0, 1, 2, 0, 3, 0, 4, 2, 3, 0, 3, 2, 1, 2, 0, 1, 7, 0, 1]
+    pages = [1, 2, 3, 4, 1, 2, 5, 1, 2, 3, 4, 5]
     frames = 3
 
     # Chạy lại mô phỏng cho từng giải thuật
