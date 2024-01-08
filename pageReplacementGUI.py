@@ -43,7 +43,7 @@ class pageReplacment:
             self.generating.destroy()
         except:
             pass
-        self.generating=tk.Text(root,height=2,width=40)
+        self.generating=tk.Text(root,height=7,width=40)
         self.generating.pack()
 
         self.select_strategy()
